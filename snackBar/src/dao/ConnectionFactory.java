@@ -1,13 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
-
-/**
- *
- * @author user
- */
+import java.sql.Connection;
+import java.sql.DriverManager;
 public class ConnectionFactory {
-    
+    public Connection  getConexao() {
+        try{
+            return DriverManager.getConnection("jdbc:mysql://localhost:3306/snackbar", "root", "password");
+        }catch (Exception erro){
+            throw new RuntimeException("Erro de conexao com a bd: "+erro);
+        }
+    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 }
