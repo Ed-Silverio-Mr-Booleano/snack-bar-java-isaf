@@ -5,6 +5,7 @@ package model;
 public class Salgadinho extends Prato {
     private String recheio;
     private String massa;
+    private String tipo;
 
     public String getRecheio() {
         return recheio;
@@ -20,6 +21,14 @@ public class Salgadinho extends Prato {
 
     public void setMassa(String massa) {
         this.massa = massa;
+    }
+    
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.massa = tipo;
     }
     
     

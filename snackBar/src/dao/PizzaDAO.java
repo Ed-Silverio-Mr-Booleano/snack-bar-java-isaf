@@ -41,8 +41,26 @@ public class PizzaDAO {
          }
      }
      
+     public void colocarIndisponivel(int pratoid){
+         String sql = "UPDATE prato SET status_ = ? WHERE id = ?";
+         
+         
+         try{
+             stmt = conn.prepareStatement(sql);
+             // Inserindo os valores
+             
+             stmt.setInt(1, 0);
+             stmt.setInt(2, pratoid);
+             stmt.execute(); 
+             
+             //stmt.close();
+         }catch(Exception erro){
+             throw new RuntimeException(" Erro na mudanca de estado: "+erro);
+         }
+     }
+     
      public ArrayList<Pizza> listarTodos() {
-        String sql = "SELECT id, nome, datavalidade, preco, qtd, molho, recheio, cobertura FROM prato";
+        String sql = "SELECT id, nome, datavalidade, preco, qtd, molho, recheio, cobertura FROM prato WHERE status_ = '"+1+"'";
         try {
             st = conn.createStatement();
             rs = st.executeQuery(sql);
@@ -58,6 +76,7 @@ public class PizzaDAO {
                 prato.setMolho(rs.getString("molho"));
                 prato.setRecheio(rs.getString("recheio"));
                 prato.setCobertura(rs.getString("cobertura"));
+                
                 
                 lista.add(prato);
             }

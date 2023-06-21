@@ -4,6 +4,17 @@ import dao.PizzaDAO;
 import model.Pedido;
 import model.Pizza;
 import table.PizzaTableModel;
+import java.util.ArrayList;
+import model.Main;
+
+// private ArrayList<Salgadinho> lista = new ArrayList<Salgadinho>();
+
+
+//pdf
+
+import java.io.FileWriter;
+import java.io.PrintWriter;
+
 
 public class PedidoView extends javax.swing.JFrame {
     
@@ -12,9 +23,22 @@ public class PedidoView extends javax.swing.JFrame {
     Pizza prato = new Pizza();
     Pedido pedido = new Pedido();
     
+    //ArrayList<Main> lista = new ArrayList<Main>();
+    
     public PedidoView() {
         initComponents();
         setLocationRelativeTo(null);
+        System.out.println(pedidoDAO.gerarFatura("500").toString());
+        
+        for(Main m: pedidoDAO.gerarFatura("500")){
+            System.out.println(m.getId());
+        }
+       
+        
+        String nome = cmbPrato.getSelectedItem().toString();
+        
+       
+        txtNome.setText(nome);
         
         // popular a tabela
         // tbPizza.setModel(new PizzaTableModel(new PizzaDAO().listarTodos()) );
@@ -180,6 +204,8 @@ public class PedidoView extends javax.swing.JFrame {
                 txtCodActionPerformed(evt);
             }
         });
+
+        txtNome.setEditable(false);
 
         btnAddCar.setText("Adicionar ao Carrinho");
         btnAddCar.addActionListener(new java.awt.event.ActionListener() {
@@ -443,7 +469,6 @@ public class PedidoView extends javax.swing.JFrame {
                             .addComponent(lblViewOtn)
                             .addComponent(lblOtn))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnFnPedido)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -480,7 +505,7 @@ public class PedidoView extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         pack();
@@ -492,6 +517,9 @@ public class PedidoView extends javax.swing.JFrame {
 
     private void cmbPratoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPratoItemStateChanged
         String prato = cmbPrato.getSelectedItem().toString();
+        
+       
+        txtNome.setText(prato);
         
         System.out.println("pratO:" + prato);
         
@@ -566,6 +594,9 @@ public class PedidoView extends javax.swing.JFrame {
 
     private void btnAddCarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCarActionPerformed
         if(txtCod.getText().equals("")){
+            
+            String nome = cmbPrato.getSelectedItem().toString();
+            txtNome.setText(nome);
             prato.SetNome(txtNome.getText());
             prato.setPreco(Double.parseDouble(txtPreco.getText()));
             prato.setDatavalidade(txtData.getText());
@@ -574,10 +605,15 @@ public class PedidoView extends javax.swing.JFrame {
             prato.setCobertura(cmbCobertura.getSelectedItem().toString());
 
             prato.setQtd((int)spnQtd.getValue());
-
-            dao.inserir(prato); //Inserir prato
             
-            tbPizza.setModel(new PizzaTableModel(new PizzaDAO().listarTodos()) );//Renderizar
+            
+            if(nome == "Pizza"){
+                 dao.inserir(prato); //Inserir prato
+            
+                 tbPizza.setModel(new PizzaTableModel(new PizzaDAO().listarTodos()) );//Renderizar
+            }
+
+           
         }
     }//GEN-LAST:event_btnAddCarActionPerformed
 
@@ -599,6 +635,7 @@ public class PedidoView extends javax.swing.JFrame {
             pedido.setPrecototal(5000);
             
             pedidoDAO.inserir(pedido);
+            dao.colocarIndisponivel( pratoid);
             lblTotal.setText("5000");
             lblOtn.setText(otn);
             
@@ -616,6 +653,27 @@ public class PedidoView extends javax.swing.JFrame {
         pedido.setOtn(lblOtn.getText());
         
         pedidoDAO.update(pedido);
+        
+         try{
+             int n = 2;
+             FileWriter arq = new FileWriter("C:\\Users\\user\\Documents\\tabuada.txt");
+             PrintWriter gravarArq = new PrintWriter(arq);
+
+             gravarArq.printf("+--Resultado--+%n");
+            for (int i=1; i<=10; i++) {
+                gravarArq.printf("| %2d X %d = %2d |%n", i, n, (i*n));
+             }
+            gravarArq.printf("+-------------+%n");
+
+            arq.close();
+
+            System.out.printf("\nTabuada do %d foi gravada com sucesso em \"d:\\tabuada.txt\".\n", n);
+  
+         }catch(Exception e){
+             throw new RuntimeException("Erro ao gerar fatura: "+e);
+         }
+        
+        
     }//GEN-LAST:event_btnFnPedidoActionPerformed
 
     /**

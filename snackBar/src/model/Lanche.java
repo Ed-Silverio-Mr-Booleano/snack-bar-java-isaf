@@ -2,7 +2,7 @@
 package model;
 
 
-public class Lanche extends Prato{
+public class Lanche extends Prato {
     private String recheio;
     private String massa;
     private String pao;
