@@ -1,19 +1,24 @@
 package view;
+import dao.PedidoDAO;
 import dao.PizzaDAO;
+import model.Pedido;
 import model.Pizza;
 import table.PizzaTableModel;
 
 public class PedidoView extends javax.swing.JFrame {
     
     PizzaDAO dao =  new PizzaDAO();
+    PedidoDAO pedidoDAO = new PedidoDAO();
     Pizza prato = new Pizza();
+    Pedido pedido = new Pedido();
     
     public PedidoView() {
         initComponents();
         setLocationRelativeTo(null);
         
         // popular a tabela
-        tbPizza.setModel(new PizzaTableModel(new PizzaDAO().listarTodos()) );
+        // tbPizza.setModel(new PizzaTableModel(new PizzaDAO().listarTodos()) );
+        //System.out.println(tbPizza.getModel().getValueAt(0, PizzaTableModel.COL_NOME).toString());
         
         //popular as combo
         molhos();
@@ -127,17 +132,21 @@ public class PedidoView extends javax.swing.JFrame {
         lblPao = new javax.swing.JLabel();
         cmbTipo = new javax.swing.JComboBox<>();
         lblTipo = new javax.swing.JLabel();
+        btnEncCar = new javax.swing.JButton();
         cmbPrato = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        btnFnPedido = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         txtCliente = new javax.swing.JTextField();
-        txtCliente1 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
+        txtVpago = new javax.swing.JTextField();
+        lblViewOtn = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         cmbFrPag = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
+        lblViewTotal = new javax.swing.JLabel();
+        lblOtn = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(956, 600));
@@ -211,6 +220,13 @@ public class PedidoView extends javax.swing.JFrame {
 
         lblTipo.setText("Tipo");
 
+        btnEncCar.setText("Encerrar Carrinho");
+        btnEncCar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEncCarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -222,7 +238,8 @@ public class PedidoView extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addGap(0, 11, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 682, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(btnAddCar, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -230,8 +247,9 @@ public class PedidoView extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(btnRmvUm)
                                         .addGap(27, 27, 27)
-                                        .addComponent(btnEditar))
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 682, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(btnEditar)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnEncCar))))
                             .addComponent(lblMassa))
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -325,7 +343,8 @@ public class PedidoView extends javax.swing.JFrame {
                     .addComponent(btnAddCar)
                     .addComponent(btnRmvTodos)
                     .addComponent(btnRmvUm)
-                    .addComponent(btnEditar))
+                    .addComponent(btnEditar)
+                    .addComponent(btnEncCar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(76, 76, 76))
@@ -342,13 +361,18 @@ public class PedidoView extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(0, 51, 51));
 
-        jButton1.setText("Finalizar Pedido");
+        btnFnPedido.setText("Finalizar Pedido");
+        btnFnPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFnPedidoActionPerformed(evt);
+            }
+        });
 
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Cliente");
 
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Total");
+        lblViewOtn.setForeground(new java.awt.Color(255, 255, 255));
+        lblViewOtn.setText("Pedido N. :");
 
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Valor Pago");
@@ -357,6 +381,13 @@ public class PedidoView extends javax.swing.JFrame {
 
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setText("Forma de Pag.");
+
+        lblViewTotal.setForeground(new java.awt.Color(255, 255, 255));
+        lblViewTotal.setText("Total");
+
+        lblOtn.setForeground(new java.awt.Color(255, 255, 255));
+
+        lblTotal.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -371,38 +402,52 @@ public class PedidoView extends javax.swing.JFrame {
                 .addGap(109, 109, 109)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(txtVpago, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnFnPedido))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(txtCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 181, Short.MAX_VALUE)
-                                .addComponent(jButton1)))
-                        .addContainerGap())
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(cmbFrPag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel7)
-                        .addGap(182, 182, 182))))
+                                .addGap(92, 92, 92)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblViewOtn)
+                                    .addComponent(lblViewTotal))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblTotal)
+                                    .addComponent(lblOtn)))
+                            .addComponent(cmbFrPag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 103, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbFrPag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbFrPag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblViewTotal)
+                            .addComponent(lblTotal))
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblViewOtn)
+                            .addComponent(lblOtn))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
+                    .addComponent(btnFnPedido)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtVpago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel8)))
                 .addContainerGap())
         );
@@ -530,13 +575,48 @@ public class PedidoView extends javax.swing.JFrame {
 
             prato.setQtd((int)spnQtd.getValue());
 
-            dao.inserir(prato);
+            dao.inserir(prato); //Inserir prato
+            
+            tbPizza.setModel(new PizzaTableModel(new PizzaDAO().listarTodos()) );//Renderizar
         }
     }//GEN-LAST:event_btnAddCarActionPerformed
 
     private void txtCodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCodActionPerformed
+
+    private void btnEncCarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEncCarActionPerformed
+        // Encerrar carrinho:
+        //System.out.println(tbPizza.getModel().getValueAt(0, PizzaTableModel.COL_NOME).toString());
+        //System.out.println("Tamanho: "+);
+        int pratoid1 = Integer.parseInt(tbPizza.getModel().getValueAt(0, PizzaTableModel.COL_ID).toString());
+        String otn =  (pratoid1 * 100) + "";
+        for (int i = 0; i < tbPizza.getRowCount(); i++){
+            int pratoid = Integer.parseInt(tbPizza.getModel().getValueAt(i, PizzaTableModel.COL_ID).toString());
+            pedido.setPratoid(pratoid);
+            pedido.setOtn(otn);
+            pedido.setTaxaservico(500);
+            pedido.setPrecototal(5000);
+            
+            pedidoDAO.inserir(pedido);
+            lblTotal.setText("5000");
+            lblOtn.setText(otn);
+            
+            
+            
+            System.out.println("Inserido otn "+ otn+ "Prato id"+ pratoid);
+        }
+    }//GEN-LAST:event_btnEncCarActionPerformed
+
+    private void btnFnPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFnPedidoActionPerformed
+        // TODO add your handling code here:
+        pedido.setMetodpgt(cmbFrPag.getSelectedItem().toString());
+        pedido.setValorpago(Double.parseDouble(txtVpago.getText()));
+        pedido.setCliente(txtCliente.getText());
+        pedido.setOtn(lblOtn.getText());
+        
+        pedidoDAO.update(pedido);
+    }//GEN-LAST:event_btnFnPedidoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -576,6 +656,8 @@ public class PedidoView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddCar;
     private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnEncCar;
+    private javax.swing.JButton btnFnPedido;
     private javax.swing.JButton btnRmvTodos;
     private javax.swing.JButton btnRmvUm;
     private javax.swing.JComboBox<String> cmbCobertura;
@@ -586,7 +668,6 @@ public class PedidoView extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cmbPrato;
     private javax.swing.JComboBox<String> cmbRecheio;
     private javax.swing.JComboBox<String> cmbTipo;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -594,7 +675,6 @@ public class PedidoView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -603,16 +683,20 @@ public class PedidoView extends javax.swing.JFrame {
     private javax.swing.JLabel lblCobertura;
     private javax.swing.JLabel lblMassa;
     private javax.swing.JLabel lblMolho;
+    private javax.swing.JLabel lblOtn;
     private javax.swing.JLabel lblPao;
     private javax.swing.JLabel lblRecheio;
     private javax.swing.JLabel lblTipo;
+    private javax.swing.JLabel lblTotal;
+    private javax.swing.JLabel lblViewOtn;
+    private javax.swing.JLabel lblViewTotal;
     private javax.swing.JSpinner spnQtd;
     private javax.swing.JTable tbPizza;
     private javax.swing.JTextField txtCliente;
-    private javax.swing.JTextField txtCliente1;
     private javax.swing.JTextField txtCod;
     private javax.swing.JTextField txtData;
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtPreco;
+    private javax.swing.JTextField txtVpago;
     // End of variables declaration//GEN-END:variables
 }
